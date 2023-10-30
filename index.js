@@ -59,7 +59,8 @@ app.post("/download",async(req,res)=>{
             .on('finish', () => {
             console.log('File Unzipped Successfully');
             fs.unlinkSync(body.destinationPath)
-            res.send({status:1, message:"File Downloaded Successfully!!!!"})
+            console.log("Zip File deleted Successfully");
+            res.send({status:1, message:"File Downloaded and Unzipped Successfully!!!!"})
 
             // Respond or perform further actions here
         });
