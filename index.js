@@ -58,6 +58,7 @@ app.post("/download",async(req,res)=>{
             .pipe(unzipper.Extract({ path: body.extractPath })) // Specify the extraction path
             .on('finish', () => {
             console.log('File Unzipped Successfully');
+            fs.unlinkSync(body.destinationPath)
             res.send({status:1, message:"File Downloaded Successfully!!!!"})
 
             // Respond or perform further actions here
