@@ -3,6 +3,7 @@ const cors = require("cors");
 const axios = require('axios');
 const bodyParser = require('body-parser');
 const fs = require('fs');
+const unzipper = require('unzipper');
 
 const app = express();
 
@@ -31,6 +32,7 @@ const port = 5001;
 
 app.post("/download",async(req,res)=>{
     const body = req.body
+    console.log(body)
     try {
         const response = await axios({
         method: 'get',
@@ -42,6 +44,7 @@ app.post("/download",async(req,res)=>{
         },
         });
 
+        
         const writer = fs.createWriteStream(body.destinationPath);
 
         response.data.pipe(writer);
@@ -49,8 +52,19 @@ app.post("/download",async(req,res)=>{
         return new Promise((resolve, reject) => {
         writer.on('finish', resolve);
         writer.on('error', reject);
-        res.send({status:1, message:"File Downloaded Successfully!!!!"})
+        }).then(()=>{
+            // Unzip the downloaded file
+            fs.createReadStream(body.destinationPath)
+            .pipe(unzipper.Extract({ path: body.extractPath })) // Specify the extraction path
+            .on('finish', () => {
+            console.log('File Unzipped Successfully');
+            res.send({status:1, message:"File Downloaded Successfully!!!!"})
+
+            // Respond or perform further actions here
         });
+        })
+        
+
     } catch (error) {
         console.error('File download failed:', error);
         res.send({status:0, message:"File Download Error!!!!!"})
