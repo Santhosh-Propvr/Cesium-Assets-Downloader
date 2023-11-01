@@ -86,10 +86,20 @@ app.post("/thumbnailDownload", async(req,res)=>{
     // Define the path and filename for the saved file
     const localFilePath = '../../Asset-Server/dist/public/assets/VRTour/Images_Testing/'+randomId+'/'+fileName;
     //const localFilePath = path.join(__dirname, 'downloads/', fileName);
+	console.log(localFilePath)
+    // Create the directory if it doesn't exist
+   fs.mkdir(localFilePath,{recursive:true},(error)=>{
+   if(error){
+console.log("directory error", error)
+}
+else{
+ console.log("New Directory")
+}
 
+})
 
     // Save the Buffer as a file
-    fs.writeFile(localFilePath, buffer, (err) => {
+    fs.writeFileSync(localFilePath, buffer, (err) => {
         if (err) {
         console.error('Error saving the file:', err);
         //   res.status(500).send('Error saving the file');
