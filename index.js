@@ -76,16 +76,16 @@ app.post("/download",async(req,res)=>{
 
 app.post("/thumbnailDownload", async(req,res)=>{
     // Assuming you have received the response in a variable called 'response'
-
+    const bodyData = req.body
     const fileData  = bodyData.data
     const fileName = req.body.fileName
-    const randomId = req.body.randomId
+    const randomId = "test123"
     // Convert the ArrayBuffer to a Buffer
     const buffer = Buffer.from(fileData);
 
     // Define the path and filename for the saved file
     const localFilePath = '../../Asset-Server/dist/public/assets/VRTour/Images_Testing/'+randomId+'/'+fileName;
-    //const localFilePath = path.join(__dirname, 'downloads', fileName);
+    //const localFilePath = path.join(__dirname, 'downloads/', fileName);
 
 
     // Save the Buffer as a file
