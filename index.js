@@ -3,6 +3,7 @@ const cors = require("cors");
 const axios = require('axios');
 const bodyParser = require('body-parser');
 const fs = require('fs');
+const path = require("path")
 const unzipper = require('unzipper');
 
 const app = express();
@@ -71,6 +72,31 @@ app.post("/download",async(req,res)=>{
         console.error('File download failed:', error);
         res.send({status:0, message:"File Download Error!!!!!"})
     }
+})
+
+app.post("/thumbnailDownload", async(req,res)=>{
+    // Assuming you have received the response in a variable called 'response'
+
+    const fileData  = bodyData.data
+    const fileName = req.body.fileName
+
+    // Convert the ArrayBuffer to a Buffer
+    const buffer = Buffer.from(fileData);
+
+    // Define the path and filename for the saved file
+    const localFilePath = path.join(__dirname, 'downloads', fileName);
+
+    // Save the Buffer as a file
+    fs.writeFile(localFilePath, buffer, (err) => {
+        if (err) {
+        console.error('Error saving the file:', err);
+        //   res.status(500).send('Error saving the file');
+        } else {
+        console.log('File saved successfully.');
+        res.send('File saved successfully');
+        }
+    });
+
 })
 
 app.get("/",(req,res)=>{
