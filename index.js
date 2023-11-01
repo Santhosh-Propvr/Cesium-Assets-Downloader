@@ -89,15 +89,11 @@ app.post("/thumbnailDownload", async(req,res)=>{
 	console.log(localFilePath)
     // Create the directory if it doesn't exist
    fs.mkdir(localFilePath,{recursive:true},(error)=>{
-   if(error){
-console.log("directory error", error)
-}
-else{
- console.log("New Directory")
-}
-
-})
-
+    if(error){
+    console.log("directory error", error)
+    }
+    else{
+    console.log("New Directory")
     // Save the Buffer as a file
     fs.writeFileSync(localFilePath, buffer, (err) => {
         if (err) {
@@ -108,7 +104,8 @@ else{
         res.send('File saved successfully');
         }
     });
-
+    }
+})
 })
 
 app.get("/",(req,res)=>{
