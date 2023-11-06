@@ -121,7 +121,7 @@ app.post("/thumbnailDownload", async (req, res) => {
             }
             else{
                 console.log("Minimap");
-                subPath = 'MiniMap_Testing/'+ randomId + '/' + fileName
+                subPath = 'Minimap_Testing/'+ randomId + '/' + fileName
                 localFilePath = '../../Asset-Server/dist/public/assets/VRTour/'+ subPath;
             }
             // Save the Buffer as a file
