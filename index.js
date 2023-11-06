@@ -100,8 +100,9 @@ app.post("/thumbnailDownload", async(req,res)=>{
         console.error('Error saving the file:', err);
         //   res.status(500).send('Error saving the file');
         } else {
+        const thumbnailurl = 'https://iron-storageserver.propvr.in/public/assets/VRTour/Images_Testing/test123/'+fileName
         console.log('File saved successfully.');
-        res.send('File saved successfully');
+        res.send({status:1, thumbnailUrl:thumbnailurl});
         }
     });
     }
