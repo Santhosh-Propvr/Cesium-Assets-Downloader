@@ -135,12 +135,12 @@ app.post("/thumbnailDownload", async (req, res) => {
                     //   res.status(500).send('Error saving the file');
                 } else {
                     console.log("else")
-                    var thumbnailUrl = ''
+                    var thumbnailurl = ''
                     if(imageType=="ProjectThumbs"){
-                        thumbnailUrl = 'https://iron-storageserver.propvr.in/public/assets/'+subPath
+                        thumbnailurl = 'https://iron-storageserver.propvr.in/public/assets/'+subPath
 
                     }else{
-                        thumbnailUrl = 'https://iron-storageserver.propvr.in/public/assets/VRTour'+subPath
+                        thumbnailurl = 'https://iron-storageserver.propvr.in/public/assets/VRTour'+subPath
                     }
                     console.log(thumbnailurl)
                     res.send({ status: 1, thumbnailUrl: thumbnailurl });
