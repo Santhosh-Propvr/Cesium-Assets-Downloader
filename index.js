@@ -97,7 +97,7 @@ app.post("/thumbnailDownload", async (req, res) => {
         localDirPath = '../../Asset-Server/dist/public/assets/VRTour/'+ subDirPath;
     }
     else{
-        let subDirPath = imageType +'/Minimap_Testing/'+ randomId;
+        let subDirPath =  'Minimap_Testing/'+ randomId;
         localDirPath = '../../Asset-Server/dist/public/assets/VRTour/'+ subDirPath;
     }
     // const localDirPath = '../../Asset-Server/dist/public/assets/VRTour/Images_Testing/' + randomId;
@@ -124,7 +124,7 @@ app.post("/thumbnailDownload", async (req, res) => {
             }
             else{
                 console.log("Minimap");
-                subPath = imageType +'Minimap_Testing/'+ randomId + '/' + fileName
+                subPath =  'Minimap_Testing/'+ randomId + '/' + fileName
                 localFilePath = '../../Asset-Server/dist/public/assets/VRTour/'+ subPath;
             }
             // Save the Buffer as a file
