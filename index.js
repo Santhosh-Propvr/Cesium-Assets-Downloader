@@ -82,6 +82,7 @@ app.post("/thumbnailDownload", async (req, res) => {
     const imageType = req.body.type;
     const projectName = req.body.projectName;
     const randomId = "test123"
+    var thumbnailUrl = ''
     // Convert the ArrayBuffer to a Buffer
     const buffer = Buffer.from(fileData);
 
@@ -112,12 +113,10 @@ app.post("/thumbnailDownload", async (req, res) => {
             console.log("New Directory")
             var localFilePath=''
             var subPath=''
-            var thumbnailUrl = ''
             if(imageType=="ProjectThumbs"){
                 console.log("ProjectThumbs");
                 subPath = imageType +'/' +projectName +'/' + fileName
                 localFilePath = '../../Asset-Server/dist/public/assets/'+ subPath;
-                thumbnailUrl = 'https://iron-storageserver.propvr.in/public/assets/'+subPath
             }
             else if(imageType=="360"){
                 console.log("VRTour");
@@ -139,6 +138,12 @@ app.post("/thumbnailDownload", async (req, res) => {
                     //   res.status(500).send('Error saving the file');
                 } else {
                     console.log("else")
+                    if(imageType=="ProjectThumbs"){
+                        thumbnailUrl = 'https://iron-storageserver.propvr.in/public/assets/'+subPath
+
+                    }else{
+                        thumbnailUrl = 'https://iron-storageserver.propvr.in/public/assets/VRTour'+subPath
+                    }
                     console.log(thumbnailurl)
                     res.send({ status: 1, thumbnailUrl: thumbnailurl });
                 }
