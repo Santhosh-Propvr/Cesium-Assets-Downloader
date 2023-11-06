@@ -80,6 +80,7 @@ app.post("/thumbnailDownload", async (req, res) => {
     const fileData = bodyData.data
     const fileName = req.body.fileName
     const imageType = req.body.type;
+    const projectName = req.body.projectName;
     const randomId = "test123"
     // Convert the ArrayBuffer to a Buffer
     const buffer = Buffer.from(fileData);
@@ -88,7 +89,7 @@ app.post("/thumbnailDownload", async (req, res) => {
     var localDirPath = ''
     if(imageType=="ProjectThumbs"){
         console.log("ProjectThumbs");
-        let subDirPath = imageType;
+        let subDirPath = imageType +'/'+ projectName;
         localDirPath = '../../Asset-Server/dist/public/assets/'+ subDirPath;
     }
     else{
@@ -110,7 +111,7 @@ app.post("/thumbnailDownload", async (req, res) => {
             var subPath=''
             if(imageType=="ProjectThumbs"){
                 console.log("ProjectThumbs");
-                subPath = imageType +'/' + fileName
+                subPath = imageType +'/' +projectName +'/' + fileName
                 localFilePath = '../../Asset-Server/dist/public/assets/'+ subPath;
             }
             else{
