@@ -86,7 +86,7 @@ app.post("/thumbnailDownload", async(req,res)=>{
     // Define the path and filename for the saved file
     const localDirPath = '../../Asset-Server/dist/public/assets/VRTour/Images_Testing/'+randomId;
     //const localFilePath = path.join(__dirname, 'downloads/', fileName);
-	console.log(localFilePath)
+	//console.log(localFilePath)
     // Create the directory if it doesn't exist
    fs.mkdir(localDirPath,{recursive:true},(error)=>{
     if(error){
@@ -96,13 +96,14 @@ app.post("/thumbnailDownload", async(req,res)=>{
     console.log("New Directory")
     const localFilePath = '../../Asset-Server/dist/public/assets/VRTour/Images_Testing/'+randomId+'/'+fileName;
     // Save the Buffer as a file
-    fs.writeFileSync(localFilePath, buffer, (err) => {
-        if (err) {
+    fs.writeFile(localFilePath, buffer, (err) => {
+	console.log("sdfsdfsdfsdfsdf")        
+if (err) {
         console.error('Error saving the file:', err);
         //   res.status(500).send('Error saving the file');
         } else {
+console.log("else")
         const thumbnailurl = 'https://iron-storageserver.propvr.in/public/assets/VRTour/Images_Testing/'+randomId+'/'+fileName
-        console.log('File saved successfully.');
         res.send({status:1, thumbnailUrl:thumbnailurl});
         }
     });
