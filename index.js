@@ -140,7 +140,7 @@ app.post("/thumbnailDownload", async (req, res) => {
                         thumbnailurl = 'https://iron-storageserver.propvr.in/public/assets/'+subPath
 
                     }else{
-                        thumbnailurl = 'https://iron-storageserver.propvr.in/public/assets/VRTour'+subPath
+                        thumbnailurl = 'https://iron-storageserver.propvr.in/public/assets/VRTour/'+subPath
                     }
                     console.log(thumbnailurl)
                     res.send({ status: 1, thumbnailUrl: thumbnailurl });
