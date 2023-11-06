@@ -114,9 +114,14 @@ app.post("/thumbnailDownload", async (req, res) => {
                 subPath = imageType +'/' +projectName +'/' + fileName
                 localFilePath = '../../Asset-Server/dist/public/assets/'+ subPath;
             }
-            else{
+            else if(imageType=="360"){
                 console.log("VRTour");
-                subPath = imageType +'/Images_Testing/'+ randomId + '/' + fileName
+                subPath = 'Images_Testing/'+ randomId + '/' + fileName
+                localFilePath = '../../Asset-Server/dist/public/assets/'+ subPath;
+            }
+            else{
+                console.log("Minimap");
+                subPath = 'MiniMap_Testing/'+ randomId + '/' + fileName
                 localFilePath = '../../Asset-Server/dist/public/assets/'+ subPath;
             }
             // Save the Buffer as a file
