@@ -112,20 +112,24 @@ app.post("/thumbnailDownload", async (req, res) => {
             console.log("New Directory")
             var localFilePath=''
             var subPath=''
+            var thumbnailUrl = ''
             if(imageType=="ProjectThumbs"){
                 console.log("ProjectThumbs");
                 subPath = imageType +'/' +projectName +'/' + fileName
                 localFilePath = '../../Asset-Server/dist/public/assets/'+ subPath;
+                thumbnailUrl = 'https://iron-storageserver.propvr.in/public/assets/'+subPath
             }
             else if(imageType=="360"){
                 console.log("VRTour");
                 subPath = imageType +'Images_Testing/'+ randomId + '/' + fileName
                 localFilePath = '../../Asset-Server/dist/public/assets/VRTour/'+ subPath;
+                thumbnailUrl = 'https://iron-storageserver.propvr.in/public/assets/VRTour/'+subPath
             }
             else{
                 console.log("Minimap");
                 subPath =  'Minimap_Testing/'+ randomId + '/' + fileName
                 localFilePath = '../../Asset-Server/dist/public/assets/VRTour/'+ subPath;
+                thumbnailUrl = 'https://iron-storageserver.propvr.in/public/assets/VRTour/'+subPath
             }
             // Save the Buffer as a file
             fs.writeFile(localFilePath, buffer, (err) => {
@@ -135,7 +139,6 @@ app.post("/thumbnailDownload", async (req, res) => {
                     //   res.status(500).send('Error saving the file');
                 } else {
                     console.log("else")
-                    const thumbnailurl = 'https://iron-storageserver.propvr.in/public/assets/'+subPath
                     console.log(thumbnailurl)
                     res.send({ status: 1, thumbnailUrl: thumbnailurl });
                 }
