@@ -92,10 +92,13 @@ app.post("/thumbnailDownload", async (req, res) => {
         let subDirPath = imageType +'/'+ projectName;
         localDirPath = '../../Asset-Server/dist/public/assets/'+ subDirPath;
     }
-    else{
-        console.log("VRTour");
+    else if(imageType=="360"){
         let subDirPath = imageType +'/Images_Testing/'+ randomId;
-        localDirPath = '../../Asset-Server/dist/public/assets/'+ subDirPath;
+        localDirPath = '../../Asset-Server/dist/public/assets/VRTour/'+ subDirPath;
+    }
+    else{
+        let subDirPath = imageType +'/Images_Testing/'+ randomId;
+        localDirPath = '../../Asset-Server/dist/public/assets/VRTour/'+ subDirPath;
     }
     // const localDirPath = '../../Asset-Server/dist/public/assets/VRTour/Images_Testing/' + randomId;
     //const localFilePath = path.join(__dirname, 'downloads/', fileName);
