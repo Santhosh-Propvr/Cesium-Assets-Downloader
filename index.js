@@ -82,7 +82,6 @@ app.post("/thumbnailDownload", async (req, res) => {
     const imageType = req.body.type;
     const projectName = req.body.projectName;
     const randomId = "test123"
-    var thumbnailUrl = ''
     // Convert the ArrayBuffer to a Buffer
     const buffer = Buffer.from(fileData);
 
@@ -122,13 +121,11 @@ app.post("/thumbnailDownload", async (req, res) => {
                 console.log("VRTour");
                 subPath = imageType +'Images_Testing/'+ randomId + '/' + fileName
                 localFilePath = '../../Asset-Server/dist/public/assets/VRTour/'+ subPath;
-                thumbnailUrl = 'https://iron-storageserver.propvr.in/public/assets/VRTour/'+subPath
             }
             else{
                 console.log("Minimap");
                 subPath =  'Minimap_Testing/'+ randomId + '/' + fileName
                 localFilePath = '../../Asset-Server/dist/public/assets/VRTour/'+ subPath;
-                thumbnailUrl = 'https://iron-storageserver.propvr.in/public/assets/VRTour/'+subPath
             }
             // Save the Buffer as a file
             fs.writeFile(localFilePath, buffer, (err) => {
@@ -138,6 +135,7 @@ app.post("/thumbnailDownload", async (req, res) => {
                     //   res.status(500).send('Error saving the file');
                 } else {
                     console.log("else")
+                    var thumbnailUrl = ''
                     if(imageType=="ProjectThumbs"){
                         thumbnailUrl = 'https://iron-storageserver.propvr.in/public/assets/'+subPath
 
