@@ -85,7 +85,7 @@ app.post("/thumbnailDownload", async (req, res) => {
     const buffer = Buffer.from(fileData);
 
     // Define the path and filename for the saved file
-    const localDirPath = ''
+    var localDirPath = ''
     if(imageType=="ProjectThumbs"){
         console.log("ProjectThumbs");
         let subDirPath = imageType;
@@ -106,8 +106,8 @@ app.post("/thumbnailDownload", async (req, res) => {
         }
         else {
             console.log("New Directory")
-            const localFilePath=''
-            const subPath=''
+            var localFilePath=''
+            var subPath=''
             if(imageType=="ProjectThumbs"){
                 console.log("ProjectThumbs");
                 subPath = imageType +'/' + fileName
