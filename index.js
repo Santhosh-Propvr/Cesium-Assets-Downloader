@@ -4,7 +4,7 @@ const axios = require('axios');
 const bodyParser = require('body-parser');
 const fs = require('fs');
 const path = require("path")
-const unzipper = require('unzipper');
+const AdmZip = require('adm-zip');
 
 const app = express();
 
@@ -55,22 +55,25 @@ app.post("/download", async (req, res) => {
             writer.on('error', reject);
         }).then(() => {
             // Unzip the downloaded file
-            fs.createReadStream(body.destinationPath)
-                .pipe(unzipper.Extract({ path: body.extractPath })) // Specify the extraction path
-                .on('finish', () => {
-                    console.log('File Unzipped Successfully');
-                    fs.unlinkSync(body.destinationPath)
-                    console.log("Zip File deleted Successfully");
-                    res.send({ status: 1, message: "File Downloaded and Unzipped Successfully!!!!" })
+            console.log("ExtractPath")
+            console.log(body.extractPath)
+            const zip = new AdmZip(body.destinationPath);
 
-                    // Respond or perform further actions here
-                });
+            try {
+                // Extract the contents to the destination folder
+                zip.extractAllTo(body.extractPath, /*overwrite*/ true);
+                console.log('Unzip completed successfully.');
+                fs.unlinkSync(body.destinationPath)
+                res.status(200).send({status:1,tileSetUrl:body.extractPath+'\tileset.json'})
+            } catch (err) {
+                console.error('Error during unzip:', err);
+            }
         })
 
 
     } catch (error) {
         console.error('File download failed:', error);
-        res.send({ status: 0, message: "File Download Error!!!!!" })
+        reject(error)
     }
 })
 
