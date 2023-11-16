@@ -96,7 +96,7 @@ app.post("/thumbnailDownload", async (req, res) => {
         localDirPath = '../../Asset-Server/dist/public/assets/'+ subDirPath;
     }
     else if(imageType=="360"){
-        let subDirPath = imageType +'/Images_Testing/'+ randomId;
+        let subDirPath = 'Images_Testing/'+ randomId;
         localDirPath = '../../Asset-Server/dist/public/assets/VRTour/'+ subDirPath;
     }
     else{
@@ -122,7 +122,7 @@ app.post("/thumbnailDownload", async (req, res) => {
             }
             else if(imageType=="360"){
                 console.log("VRTour");
-                subPath = imageType +'Images_Testing/'+ randomId + '/' + fileName
+                subPath = 'Images_Testing/'+ randomId + '/' + fileName
                 localFilePath = '../../Asset-Server/dist/public/assets/VRTour/'+ subPath;
             }
             else{
