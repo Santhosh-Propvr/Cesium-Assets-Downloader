@@ -5,9 +5,10 @@ const bodyParser = require('body-parser');
 const fs = require('fs');
 const path = require("path")
 const AdmZip = require('adm-zip');
+require("dotenv").config();
 
 const app = express();
-
+console.log(process.env.THUMBNAIL_URL)
 const CESIUM_API_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiIxZDEzNDFjZC1hMTU2LTQxZTAtODAwYy0wMDdhZDk2ZjRiNjciLCJpZCI6MTc0MDI3LCJpYXQiOjE2OTgzMDYwOTN9._yz8fsU4g44poarvkoqg-XRH9n7HerxtMa9QLQEld0k"
 
 app.use(bodyParser.json({
@@ -148,10 +149,10 @@ app.post("/thumbnailDownload", async (req, res) => {
                     console.log("else")
                     var thumbnailurl = ''
                     if(imageType=="ProjectThumbs"){
-                        thumbnailurl = 'https://iron-storageserver.propvr.in/public/assets/'+subPath
+                        thumbnailurl = process.env.THUMBNAIL_URL+'/public/assets/'+subPath
 
                     }else{
-                        thumbnailurl = 'https://iron-storageserver.propvr.in/public/assets/VRTour/'+subPath
+                        thumbnailurl = process.env.THUMBNAIL_URL+'/public/assets/VRTour/'+subPath
                     }
                     console.log(thumbnailurl)
                     res.send({ status: 1, thumbnailUrl: thumbnailurl });
