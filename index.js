@@ -30,6 +30,14 @@ app.use((req, res, next) => {
 
 const port = 5001;
 
+function generateRandomId() {
+    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    let randomId = '';
+    for (let i = 0; i < 8; i++) {
+        randomId += characters.charAt(Math.floor(Math.random() * characters.length));
+    }
+    return randomId;
+}
 
 app.post("/download", async (req, res) => {
     const body = req.body
@@ -84,7 +92,7 @@ app.post("/thumbnailDownload", async (req, res) => {
     const fileName = req.body.fileName
     const imageType = req.body.type;
     const projectName = req.body.projectName;
-    const randomId = "test123"
+    const randomId = generateRandomId();
     // Convert the ArrayBuffer to a Buffer
     const buffer = Buffer.from(fileData);
 
