@@ -2,11 +2,13 @@ const express = require('express');
 const cors = require("cors");
 const axios = require('axios');
 const bodyParser = require('body-parser');
-const fs = require('fs');
+const fs = require('fs-extra');
 const path = require("path")
 const AdmZip = require('adm-zip');
+const { exec } = require('child_process');
 require("dotenv").config();
-
+const util = require('util');
+const execPromise = util.promisify(exec);
 const app = express();
 console.log(process.env.THUMBNAIL_URL)
 const CESIUM_API_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiIxZDEzNDFjZC1hMTU2LTQxZTAtODAwYy0wMDdhZDk2ZjRiNjciLCJpZCI6MTc0MDI3LCJpYXQiOjE2OTgzMDYwOTN9._yz8fsU4g44poarvkoqg-XRH9n7HerxtMa9QLQEld0k"
@@ -161,6 +163,54 @@ app.post("/thumbnailDownload", async (req, res) => {
         }
     })
 })
+function convertToGsUtilPath(firebaseUrl) {
+  const match = firebaseUrl.match(/https:\/\/firebasestorage\.googleapis\.com\/v0\/b\/([^/]+)\/o\/(.+)/);
+  if (!match) return null;
+
+  const bucket = match[1];
+  const encodedPath = match[2].split('?')[0]; // in case there's a query string
+  const decodedPath = decodeURIComponent(encodedPath);
+
+  return `gs://${bucket}/${decodedPath}`;
+}
+app.post("/firebaseTilesAPI", async (req, res) => {
+  const body = req.body;
+  console.log(body);
+
+  try {
+    const bucketPath = convertToGsUtilPath(body.thumbnail_url);
+    const folderName = bucketPath.split('/').pop();
+    console.log("folderName",folderName)
+    const targetPath = '../../Asset-Server/dist/public/assets/VRTour/Tiles_Testing';
+
+    await fs.ensureDir(targetPath); // Ensure target directory exists
+
+    console.log("Downloading from:", bucketPath);
+
+    // Step 1: Download with gsutil
+    await execPromise(`gsutil -m cp -r "${bucketPath}" .`).then(async ()=>{
+    await fs.copy(folderName, path.join(targetPath, folderName), { overwrite: true }).then(()=>{
+      fs.remove(folderName);
+    })
+    console.log("Folder copied");
+    })
+    const thumbnailurl = process.env.THUMBNAIL_URL+'/public/assets/VRTour/Tiles_Testing/'+ folderName
+    res.send({ status: 1, URL :thumbnailurl });
+
+  } catch (err) {
+    console.error("Error:", err);
+    res.status(500).send({ status: 0, error: err.message });
+  }
+});
+app.get("/", (req, res) => {
+    res.send({ status: 1 })
+})
+
+//listen server
+app.listen(port, () => console.log(`listening on port ${port}!`))
+
+
+
 app.post("/firebaseTilesAPI", async (req, res) => {
   const body = req.body;
   console.log(body);
@@ -195,9 +245,3 @@ app.post("/firebaseTilesAPI", async (req, res) => {
     res.status(500).send({ status: 0, error: err.message });
   }
 });
-app.get("/", (req, res) => {
-    res.send({ status: 1 })
-})
-
-//listen server
-app.listen(port, () => console.log(`listening on port ${port}!`))
