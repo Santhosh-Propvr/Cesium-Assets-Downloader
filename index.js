@@ -161,41 +161,40 @@ app.post("/thumbnailDownload", async (req, res) => {
         }
     })
 })
-app.post("/firebaseTilesAPI",async(req,res)=>{
-    const body = req.body
-    console.log(body)
-    try{
-        const saveFolder = path.resolve(__dirname, 'dist/public/assets/VRTour');
-        fs.mkdirSync(saveFolder, { recursive: true });
-        const fileName = path.basename(body.thumbnail_url).split('/').pop();
-        const savePath = path.join(saveFolder, fileName);
+app.post("/firebaseTilesAPI", async (req, res) => {
+  const body = req.body;
+  console.log(body);
 
-            axios({
-            method: 'GET',
-            url: body.thumbnail_url,
-            responseType: 'stream'
-            }).then(response => {
-            const writer = fs.createWriteStream(savePath);
-            response.data.pipe(writer);
+  try {
+    const localFilePath ='../../Asset-Server/dist/public/assets/VRTour'; // correct relative path
 
-            writer.on('finish', () => {
-                console.log(`Image saved to ${savePath}`);
-                res.send({ status: 1, savePath: savePath });
-            });
+    // Ensure directory exists
+    await fs.promises.mkdir(localFilePath, { recursive: true });
 
-            writer.on('error', err => {
-                console.error('Error saving image:', err);
-            });
-            }).catch(err => {
-            console.error('Error downloading image:', err.message);
-            });
-        }
-        catch(err){
-        console.error('Error saving the file:', err);
-        res.send({ status: 0, Error: err });
-        }
+    const fileName = path.basename(body.thumbnail_url);
+    const savePath = path.join(localFilePath, fileName);
 
-})
+    // Fetch image
+    const response = await axios.get(body.thumbnail_url, {
+      responseType: 'arraybuffer'
+    });
+
+    // Save file
+    fs.writeFile(savePath, response.data, err => {
+      if (err) {
+        console.error('Error saving image:', err);
+        return res.status(500).send({ status: 0, error: err.message });
+      }
+      const thumbnailurl = process.env.THUMBNAIL_URL+'/public/assets/VRTour/'+fileName
+      console.log(`Image saved to ${savePath}`);
+      res.send({ status: 1, thumbnailurl });
+    });
+
+  } catch (err) {
+    console.error('Error:', err);
+    res.status(500).send({ status: 0, error: err.message });
+  }
+});
 app.get("/", (req, res) => {
     res.send({ status: 1 })
 })
