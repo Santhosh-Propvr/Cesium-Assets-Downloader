@@ -161,7 +161,41 @@ app.post("/thumbnailDownload", async (req, res) => {
         }
     })
 })
+app.post("/firebaseTilesAPI",async(req,res)=>{
+    const body = req.body
+    console.log(body)
+    try{
+        const saveFolder = path.resolve(__dirname, 'dist/public/assets/VRTour');
+        fs.mkdirSync(saveFolder, { recursive: true });
+        const fileName = path.basename(body.thumbnail_url).split('/').pop();
+        const savePath = path.join(saveFolder, fileName);
 
+            axios({
+            method: 'GET',
+            url: body.thumbnail_url,
+            responseType: 'stream'
+            }).then(response => {
+            const writer = fs.createWriteStream(savePath);
+            response.data.pipe(writer);
+
+            writer.on('finish', () => {
+                console.log(`Image saved to ${savePath}`);
+                res.send({ status: 1, savePath: savePath });
+            });
+
+            writer.on('error', err => {
+                console.error('Error saving image:', err);
+            });
+            }).catch(err => {
+            console.error('Error downloading image:', err.message);
+            });
+        }
+        catch(err){
+        console.error('Error saving the file:', err);
+        res.send({ status: 0, Error: err });
+        }
+
+})
 app.get("/", (req, res) => {
     res.send({ status: 1 })
 })
