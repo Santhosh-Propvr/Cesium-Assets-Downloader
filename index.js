@@ -172,13 +172,45 @@ function convertToGsUtilPath(firebaseUrl) {
   const decodedPath = decodeURIComponent(encodedPath);
 
   return `gs://${bucket}/${decodedPath}`;
+} 
+async function StoreTileRenderImage(u_id,projectName,tileUrl,fileName,thumbnailUrl,type) {
+    return new Promise((resolve,reject)=>{
+        const myHeaders = new Headers();
+        myHeaders.append("Content-Type", "application/json");
+        const raw = JSON.stringify({
+                "u_id": u_id,
+                "projectName": projectName,
+                "tileUrl": tileUrl,
+                "name": fileName,
+                "thumbnailUrl": thumbnailUrl,
+                "type": type
+            });
+        console.log("raw",raw)
+            const requestOptions = {
+                method: "POST",
+                headers: myHeaders,
+                body: raw,
+                redirect: "follow"
+            };
+            fetch(`${process.env.CREATOR_BACKEND}/storeTileRenderImage`, requestOptions) //http://localhost:6002
+            .then((response) => response.text())
+            .then((result) =>{
+                console.log(result);
+                resolve();
+            })
+            .catch((error) =>{
+                console.error(error);
+                reject()
+            });    
+    })    
 }
 app.post("/firebaseTilesAPI", async (req, res) => {
   const body = req.body;
+  const {u_id,projectName,type,thumbnail_url,fileName} = req.body;
   console.log(body);
 
   try {
-    const bucketPath = convertToGsUtilPath(body.thumbnail_url);
+    const bucketPath = convertToGsUtilPath(body.firebase_tile_url);
     const folderName = bucketPath.split('/').pop();
     console.log("folderName",folderName)
     const targetPath = '../../Asset-Server/dist/public/assets/VRTour/Tiles_Testing';
@@ -192,10 +224,10 @@ app.post("/firebaseTilesAPI", async (req, res) => {
     await fs.copy(folderName, path.join(targetPath, folderName), { overwrite: true }).then(()=>{
       fs.remove(folderName);
     })
-    console.log("Folder copied");
     })
-    const thumbnailurl = process.env.THUMBNAIL_URL+'/public/assets/VRTour/Tiles_Testing/'+ folderName
-    res.send({ status: 1, URL :thumbnailurl });
+    const assetURL = process.env.THUMBNAIL_URL+'/public/assets/VRTour/Tiles_Testing/'+ folderName
+    await StoreTileRenderImage(u_id,projectName,assetURL,fileName,thumbnail_url,type)
+    res.send({ status: 1, URL :assetURL });
 
   } catch (err) {
     console.error("Error:", err);
@@ -208,40 +240,3 @@ app.get("/", (req, res) => {
 
 //listen server
 app.listen(port, () => console.log(`listening on port ${port}!`))
-
-
-
-app.post("/firebaseTilesAPI", async (req, res) => {
-  const body = req.body;
-  console.log(body);
-
-  try {
-    const localFilePath ='../../Asset-Server/dist/public/assets/VRTour'; // correct relative path
-
-    // Ensure directory exists
-    await fs.promises.mkdir(localFilePath, { recursive: true });
-
-    const fileName = path.basename(body.thumbnail_url);
-    const savePath = path.join(localFilePath, fileName);
-
-    // Fetch image
-    const response = await axios.get(body.thumbnail_url, {
-      responseType: 'arraybuffer'
-    });
-
-    // Save file
-    fs.writeFile(savePath, response.data, err => {
-      if (err) {
-        console.error('Error saving image:', err);
-        return res.status(500).send({ status: 0, error: err.message });
-      }
-      const thumbnailurl = process.env.THUMBNAIL_URL+'/public/assets/VRTour/'+fileName
-      console.log(`Image saved to ${savePath}`);
-      res.send({ status: 1, thumbnailurl });
-    });
-
-  } catch (err) {
-    console.error('Error:', err);
-    res.status(500).send({ status: 0, error: err.message });
-  }
-});
