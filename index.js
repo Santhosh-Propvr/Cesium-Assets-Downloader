@@ -11,7 +11,7 @@ const util = require('util');
 const execPromise = util.promisify(exec);
 const app = express();
 console.log(process.env.THUMBNAIL_URL)
-const CESIUM_API_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiIxZDEzNDFjZC1hMTU2LTQxZTAtODAwYy0wMDdhZDk2ZjRiNjciLCJpZCI6MTc0MDI3LCJpYXQiOjE2OTgzMDYwOTN9._yz8fsU4g44poarvkoqg-XRH9n7HerxtMa9QLQEld0k"
+const CESIUM_API_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiIyZGMxNzIxYi1kNDljLTQzYmMtODY5Mi00N2Q1MWFiZjA0YzciLCJpZCI6MzAyNjgzLCJpYXQiOjE3NDcyOTU4NTF9.Hi8Zz8OtZIa2gbLqyqpdnvUX6DblHO6zQ4nMpWYSz9Q"
 
 app.use(bodyParser.json({
     limit: '50mb', extended: true
